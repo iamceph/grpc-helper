@@ -1,0 +1,11 @@
+dependencies {
+    //protobuf
+    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: protobuf_version
+
+    //grpc
+    implementation group: 'io.grpc', name: 'grpc-protobuf', version: grpc_version
+    implementation group: 'io.grpc', name: 'grpc-stub', version: grpc_version
+    implementation group: 'io.grpc', name: 'protoc-gen-grpc-java', version: grpc_version
+
+    implementation group: 'io.github.classgraph', name: 'classgraph', version: '4.8.90'
+}
