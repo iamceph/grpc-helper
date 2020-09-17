@@ -1,8 +1,7 @@
-package cz.iamceph.grpchelper.wrapper.channel;
+package cz.iamceph.grpchelper.api;
 
 import java.util.concurrent.Executor;
 
-import cz.iamceph.grpchelper.wrapper.config.ChannelConfig;
 import io.grpc.ConnectivityState;
 import io.grpc.ManagedChannel;
 import lombok.Data;
@@ -12,7 +11,7 @@ import lombok.Data;
  * @created 16/09/2020 - 9:35
  */
 @Data
-public abstract class ChannelWrapper {
+public abstract class ChannelHolder {
     protected ChannelConfig config;
     protected ManagedChannel channel;
 

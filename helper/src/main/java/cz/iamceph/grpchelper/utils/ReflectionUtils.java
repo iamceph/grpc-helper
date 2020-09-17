@@ -13,7 +13,6 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class ReflectionUtils {
-
     public List<Method> getMethodDescriptorMethods(Class<?> clazz, Class<?> resultClass) {
         return Arrays.stream(clazz.getMethods())
                 .filter(method -> method.getReturnType().isAssignableFrom(resultClass))

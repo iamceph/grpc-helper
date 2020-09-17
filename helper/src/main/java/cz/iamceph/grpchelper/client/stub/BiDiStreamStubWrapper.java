@@ -1,8 +1,8 @@
-package cz.iamceph.grpchelper.wrapper.stub;
+package cz.iamceph.grpchelper.client.stub;
 
 import java.util.concurrent.Executor;
 
-import cz.iamceph.grpchelper.wrapper.channel.ChannelWrapper;
+import cz.iamceph.grpchelper.api.ChannelHolder;
 import io.grpc.MethodDescriptor;
 import io.grpc.stub.ClientCalls;
 import io.grpc.stub.StreamObserver;
@@ -14,13 +14,14 @@ import io.grpc.stub.StreamObserver;
  * BiDirectional
  */
 public class BiDiStreamStubWrapper<M, R> extends StreamStubInitializer<M, R> {
+    private StreamObserver<M> clientObserver;
 
-    private BiDiStreamStubWrapper(ChannelWrapper channel, Class<?> clazz,
+    private BiDiStreamStubWrapper(ChannelHolder channel, Class<?> clazz,
                                   MethodDescriptor<M, R> methodDescriptor, Executor executor) {
         super(channel, clazz, methodDescriptor, executor);
     }
 
-    public static <M, R> BiDiStreamStubWrapper<M, R> create(ChannelWrapper channel, Class<?> clazz,
+    public static <M, R> BiDiStreamStubWrapper<M, R> create(ChannelHolder channel, Class<?> clazz,
                                                             MethodDescriptor<M, R> methodDescriptor, Executor executor) throws Exception {
         final var toReturn = new BiDiStreamStubWrapper<>(channel, clazz, methodDescriptor, executor);
         toReturn.init();
@@ -32,14 +33,14 @@ public class BiDiStreamStubWrapper<M, R> extends StreamStubInitializer<M, R> {
         return this;
     }
 
-    public StreamObserver<M> initClientStream() {
+    public BiDiStreamStubWrapper<M, R> initClientStream() {
         if (observer == null) {
             throw new UnsupportedOperationException("ResponseHandler is null!");
         }
         return initBiStream(observer);
     }
 
-    public StreamObserver<M> initBiStream(StreamObserver<R> observer) {
+    public BiDiStreamStubWrapper<M, R> initBiStream(StreamObserver<R> observer) {
         if (channel.checkIntegrity(executor)) {
             try {
                 init();
@@ -48,7 +49,25 @@ public class BiDiStreamStubWrapper<M, R> extends StreamStubInitializer<M, R> {
             }
         }
 
-        return ClientCalls.asyncBidiStreamingCall(
+        clientObserver = ClientCalls.asyncBidiStreamingCall(
                 stub.getChannel().newCall(methodDescriptor, stub.getCallOptions()), observer);
+
+        return this;
+    }
+
+    public void send(M message) {
+        if (clientObserver == null) {
+            throw new UnsupportedOperationException("ClientObserver is null!");
+        }
+
+        clientObserver.onNext(message);
+    }
+
+    public void error(Throwable throwable) {
+        if (clientObserver == null) {
+            throw new UnsupportedOperationException("ClientObserver is null!");
+        }
+
+        clientObserver.onError(throwable);
     }
 }

@@ -1,44 +1,35 @@
-package cz.iamceph.grpchelper.handler;
+package cz.iamceph.grpchelper.client.handler;
 
 import java.util.concurrent.Executor;
 
-import cz.iamceph.grpchelper.client.SimpleGrpcClient;
+import cz.iamceph.grpchelper.client.stub.BiDiStreamStubWrapper;
+import cz.iamceph.grpchelper.client.stub.ClientStreamStubWrapper;
+import cz.iamceph.grpchelper.client.stub.FutureStubWrapper;
+import cz.iamceph.grpchelper.client.stub.ServerStreamStubWrapper;
 import cz.iamceph.grpchelper.utils.ReflectionUtils;
-import cz.iamceph.grpchelper.wrapper.channel.ChannelWrapper;
-import cz.iamceph.grpchelper.wrapper.stub.BiDiStreamStubWrapper;
-import cz.iamceph.grpchelper.wrapper.stub.ClientStreamStubWrapper;
-import cz.iamceph.grpchelper.wrapper.stub.FutureStubWrapper;
-import cz.iamceph.grpchelper.wrapper.stub.ServerStreamStubWrapper;
+import cz.iamceph.grpchelper.api.ChannelHolder;
 import io.grpc.MethodDescriptor;
 
 /**
  * @author Frantisek Novosad (fnovosad@monetplus.cz)
  * @created 16/09/2020 - 9:43
  */
-public abstract class BaseChannelHandler<M, R> {
-    private final Class<?> serviceClazz;
-    private final ChannelWrapper channel;
-    private final Executor executor;
+public abstract class ClientChannelHandler<M, R> {
+    protected final Class<?> serviceClazz;
+    protected final ChannelHolder channel;
+    protected final Executor executor;
 
     protected BiDiStreamStubWrapper<M, R> bidiStreamStubWrapper;
     protected ClientStreamStubWrapper<M, R> clientStreamStubWrapper;
     protected ServerStreamStubWrapper<M, R> serverStreamStubWrapper;
     protected FutureStubWrapper<M, R> futureStubWrapper;
 
-    public BaseChannelHandler(Class<?> serviceClazz, ChannelWrapper channel, Executor executor) {
-        this(serviceClazz, channel, executor, null);
-    }
-
-    public BaseChannelHandler(Class<?> serviceClazz, ChannelWrapper channel, Executor executor, SimpleGrpcClient<M, R> owner) {
+    public ClientChannelHandler(Class<?> serviceClazz, ChannelHolder channel, Executor executor) {
         this.serviceClazz = serviceClazz;
         this.channel = channel;
         this.executor = executor;
 
         init();
-
-        if (owner != null) {
-            owner.registerHandler(this);
-        }
     }
 
     public BiDiStreamStubWrapper<M, R> biDiStream() {

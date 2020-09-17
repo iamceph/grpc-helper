@@ -1,5 +1,6 @@
-package cz.iamceph.grpchelper.wrapper.config;
+package cz.iamceph.grpchelper.api;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import io.grpc.ClientInterceptor;
@@ -12,5 +13,6 @@ import lombok.Data;
 @Data
 public class ChannelConfig {
     private final String address;
-    private List<ClientInterceptor> interceptors;
+    private final String authToken;
+    private List<ClientInterceptor> interceptors = new LinkedList<>();
 }

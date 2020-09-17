@@ -1,8 +1,8 @@
-package cz.iamceph.grpchelper.wrapper.stub;
+package cz.iamceph.grpchelper.client.stub;
 
 import java.util.concurrent.Executor;
 
-import cz.iamceph.grpchelper.wrapper.channel.ChannelWrapper;
+import cz.iamceph.grpchelper.api.ChannelHolder;
 import io.grpc.Channel;
 import io.grpc.MethodDescriptor;
 import io.grpc.stub.AbstractAsyncStub;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 abstract class StreamStubInitializer<M, R> {
-    protected final ChannelWrapper channel;
+    protected final ChannelHolder channel;
     protected final Class<?> clazz;
     protected final MethodDescriptor<M, R> methodDescriptor;
     protected final Executor executor;

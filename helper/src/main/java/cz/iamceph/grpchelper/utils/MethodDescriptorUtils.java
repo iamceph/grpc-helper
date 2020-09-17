@@ -1,4 +1,4 @@
-package cz.iamceph.grpchelper.wrapper.method;
+package cz.iamceph.grpchelper.utils;
 
 import io.grpc.MethodDescriptor;
 import lombok.experimental.UtilityClass;
@@ -8,8 +8,7 @@ import lombok.experimental.UtilityClass;
  * @created 15/09/2020 - 20:25
  */
 @UtilityClass
-public class MethodDescriptorWrapper {
-
+public class MethodDescriptorUtils {
     @SuppressWarnings("unchecked")
     public <M, R> MethodDescriptor<M, R> getMethod(Class<?> clazz, String methodName) {
         try {

@@ -1,10 +1,10 @@
-package cz.iamceph.grpchelper.wrapper.stub;
+package cz.iamceph.grpchelper.client.stub;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import cz.iamceph.grpchelper.utils.FutureUtils;
-import cz.iamceph.grpchelper.wrapper.channel.ChannelWrapper;
+import cz.iamceph.grpchelper.api.ChannelHolder;
 import io.grpc.Channel;
 import io.grpc.MethodDescriptor;
 import io.grpc.stub.AbstractFutureStub;
@@ -18,14 +18,14 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class FutureStubWrapper<M, R> {
-    private final ChannelWrapper channel;
+    private final ChannelHolder channel;
     private final Class<?> clazz;
     private final MethodDescriptor<M, R> methodDescriptor;
     private final Executor executor;
 
     private AbstractFutureStub<?> stub;
 
-    public static <M, R> FutureStubWrapper<M, R> create(ChannelWrapper channel, Class<?> clazz,
+    public static <M, R> FutureStubWrapper<M, R> create(ChannelHolder channel, Class<?> clazz,
                                                         MethodDescriptor<M, R> methodDescriptor, Executor executor) throws Exception {
         final var toReturn = new FutureStubWrapper<>(channel, clazz, methodDescriptor, executor);
         toReturn.init();

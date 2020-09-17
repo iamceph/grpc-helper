@@ -1,8 +1,8 @@
-package cz.iamceph.grpchelper.wrapper.stub;
+package cz.iamceph.grpchelper.client.stub;
 
 import java.util.concurrent.Executor;
 
-import cz.iamceph.grpchelper.wrapper.channel.ChannelWrapper;
+import cz.iamceph.grpchelper.api.ChannelHolder;
 import io.grpc.MethodDescriptor;
 import io.grpc.stub.ClientCalls;
 import io.grpc.stub.StreamObserver;
@@ -12,13 +12,12 @@ import io.grpc.stub.StreamObserver;
  * @created 16/09/2020 - 9:45
  */
 public class ServerStreamStubWrapper<M, R> extends StreamStubInitializer<M, R> {
-
-    private ServerStreamStubWrapper(ChannelWrapper channel, Class<?> clazz,
+    private ServerStreamStubWrapper(ChannelHolder channel, Class<?> clazz,
                                     MethodDescriptor<M, R> methodDescriptor, Executor executor) {
         super(channel, clazz, methodDescriptor, executor);
     }
 
-    public static <M, R> ServerStreamStubWrapper<M, R> create(ChannelWrapper channel, Class<?> clazz,
+    public static <M, R> ServerStreamStubWrapper<M, R> create(ChannelHolder channel, Class<?> clazz,
                                                               MethodDescriptor<M, R> methodDescriptor, Executor executor) throws Exception {
         final var toReturn = new ServerStreamStubWrapper<>(channel, clazz, methodDescriptor, executor);
         toReturn.init();
@@ -40,12 +39,14 @@ public class ServerStreamStubWrapper<M, R> extends StreamStubInitializer<M, R> {
     public void send(M request, StreamObserver<R> observer) {
         if (channel.checkIntegrity(executor)) {
             try {
+                System.out.println("Initializing new channel!!!!!!!!!!!!!!");
                 init();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        System.out.println("Just sending");
         ClientCalls.asyncServerStreamingCall(
                 stub.getChannel().newCall(methodDescriptor, stub.getCallOptions()), request, observer);
     }
